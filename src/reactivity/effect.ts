@@ -1,44 +1,52 @@
 class ReactiveEffect {
   private _effectFn: () => void;
+  public scheduler: Function | undefined;
 
-  constructor(fn: any) {
+  constructor(fn: any, scheduler?: Function) {
     this._effectFn = fn;
+    this.scheduler = scheduler;
   }
   run() {
     activeEffect = this as any;
-    this._effectFn();
+    return this._effectFn();
   }
 }
 
 let activeEffect = void 0;
-const targetDepMaps = new Map();
+const targetMap = new Map();
 
 export const collectionEffect = (target, key) => {
-  let targetDeps = targetDepMaps.get(target);
-  if (!targetDeps) {
-    targetDeps = new Map();
-    targetDepMaps.set(target, targetDeps);
+  let depsMap = targetMap.get(target);
+  if (!depsMap) {
+    depsMap = new Map();
+    targetMap.set(target, depsMap);
   }
 
-  let deps = targetDeps.get(key);
+  let deps = depsMap.get(key);
   if (!deps) {
     deps = new Set();
-    targetDeps.set(key, deps);
+    depsMap.set(key, deps);
   }
 
   deps.add(activeEffect);
 };
 
 export const triggerEffect = (target, key) => {
-  const maps = targetDepMaps.get(target);
+  const maps = targetMap.get(target);
   const effects = maps.get(key);
 
   for (let effect of effects) {
-    effect.run && effect.run();
+    if (effect.scheduler) {
+      effect.scheduler();
+    } else {
+      effect.run && effect.run();
+    }
   }
 };
 
-export const effect = (fn: () => void) => {
-  const _effect = new ReactiveEffect(fn);
+export const effect = (fn: () => void, options = {}) => {
+  const _effect = new ReactiveEffect(fn, options.scheduler);
   _effect.run();
+  const runner = _effect.run.bind(_effect);
+  return runner;
 };
