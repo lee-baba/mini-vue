@@ -1,7 +1,16 @@
 import { collectionEffect, triggerEffect } from "./effect";
 
+export const enum reactiveFlag {
+  ISREACTIVE = "_IS_REACTIVE",
+  ISREADONLU = "_IS_READONLY",
+}
+
 const createGetter = (isReadonly = false) => {
   return (target: any, key: any) => {
+    if (key === reactiveFlag.ISREACTIVE) return !isReadonly;
+
+    if (key === reactiveFlag.ISREADONLU) return !!isReadonly;
+
     const result = Reflect.get(target, key);
     if (!isReadonly) {
       collectionEffect(target, key);
