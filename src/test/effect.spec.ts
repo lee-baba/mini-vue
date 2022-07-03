@@ -1,4 +1,4 @@
-import { effect } from "./../reactivity/effect";
+import { effect, stop } from "./../reactivity/effect";
 import { reactive } from "./../reactivity/reactive";
 
 describe("reactivity", () => {
@@ -54,5 +54,30 @@ describe("reactivity", () => {
     expect(dummy).toBe(1);
     run();
     expect(dummy).toBe(2);
+  });
+
+  it("stop", () => {
+    let dummy;
+    const obj = reactive({ foo: 1 });
+
+    const scheduler = jest.fn(() => {
+      dummy = obj.foo;
+    });
+
+    const runner = effect(() => {
+      dummy = obj.foo;
+    });
+
+    obj.foo = 2;
+
+    expect(dummy).toBe(2);
+    stop(runner);
+    obj.foo = 3;
+    expect(dummy).toBe(2);
+    // 重新收集也不可以
+    obj.foo += 1;
+    expect(dummy).toBe(2);
+    runner();
+    expect(dummy).toBe(4);
   });
 });
