@@ -1,9 +1,12 @@
+import { extend } from "../shared";
+
 // 是否需要收集依赖
 let shouleCollectionEffect = true;
 class ReactiveEffect {
   private _effectFn: () => void;
   public scheduler: Function | undefined;
   deps = [];
+  onStop: (() => void) | undefined;
   // 避免多次执行stop
   isActive: Boolean = true;
   constructor(fn: any, scheduler?: Function) {
@@ -24,6 +27,7 @@ class ReactiveEffect {
     this.isActive = false;
     shouleCollectionEffect = false;
     cleanDepEffect(this);
+    this.onStop && this.onStop();
   }
 }
 
@@ -66,7 +70,7 @@ export const triggerEffect = (target: any, key: any) => {
     if (effect.scheduler) {
       effect.scheduler();
     } else {
-      effect.run && effect.run();
+      effect.run();
     }
   }
 };
@@ -77,6 +81,7 @@ export const stop = (runner: any) => {
 
 export const effect = (fn: () => void, options = {} as any) => {
   const _effect = new ReactiveEffect(fn, options.scheduler);
+  extend(_effect, options);
   _effect.run();
   const runner: any = _effect.run.bind(_effect);
   runner.effect = _effect;
