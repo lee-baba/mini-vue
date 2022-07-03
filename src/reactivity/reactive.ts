@@ -1,18 +1,13 @@
-import { collectionEffect, triggerEffect } from "./effect";
-export const reactive = (raw) => {
-  return new Proxy(raw, {
-    get(target, key) {
-      const result = Reflect.get(target, key);
+import { mutableHandlers, readonlyHandlers } from "./baseHandler";
 
-      // TODO 收集依赖
-      collectionEffect(target, key);
-      return result;
-    },
-    set(target, key, value) {
-      const result = Reflect.set(target, key, value);
-      // TODO 触发所有的依赖
-      triggerEffect(target, key);
-      return result;
-    },
-  });
+export const reactive = (raw = {}) => {
+  return createProxyObject(raw, mutableHandlers);
+};
+
+export const readonly = (raw = {}) => {
+  return createProxyObject(raw, readonlyHandlers);
+};
+
+const createProxyObject = (raw: any, baseHandlers: any) => {
+  return new Proxy(raw, baseHandlers);
 };
