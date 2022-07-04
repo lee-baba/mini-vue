@@ -2,7 +2,7 @@ import { extend } from "../shared";
 
 // 是否需要收集依赖
 let shouleCollectionEffect = false;
-class ReactiveEffect {
+export class ReactiveEffect {
   private _effectFn: () => void;
   public scheduler: Function | undefined;
   deps = [];
