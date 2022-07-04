@@ -44,7 +44,7 @@ const cleanDepEffect = (effect: ReactiveEffect) => {
 let activeEffect = void 0;
 const targetMap = new Map();
 
-const canCollect = () => {
+export const canCollect = () => {
   return activeEffect !== undefined && shouleCollectionEffect;
 };
 
@@ -56,17 +56,16 @@ export const collectionEffect = (target: any, key: any) => {
     targetMap.set(target, depsMap);
   }
 
-  trackEffect(depsMap, key);
-};
-
-export const trackEffect = (depsMap: any, key: any) => {
-  if (!activeEffect) return;
   let deps = depsMap.get(key);
   if (!deps) {
     deps = new Set();
     depsMap.set(key, deps);
   }
 
+  trackEffect(deps);
+};
+
+export const trackEffect = (deps: any) => {
   deps.add(activeEffect);
   (activeEffect as any).deps.push(deps);
 };
@@ -74,10 +73,10 @@ export const trackEffect = (depsMap: any, key: any) => {
 export const triggerEffect = (target: any, key: any) => {
   const maps = targetMap.get(target);
   const effects = maps.get(key);
-  triggerAction(effects);
+  triggerActionEffect(effects);
 };
 
-export const triggerAction = (effects: any) => {
+export const triggerActionEffect = (effects: any) => {
   for (let effect of effects) {
     if (effect.scheduler) {
       effect.scheduler();
