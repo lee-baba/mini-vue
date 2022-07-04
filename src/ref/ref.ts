@@ -52,3 +52,17 @@ export const isRef = (ref: RefImpt | any) => {
 export const unRef = (ref: RefImpt | any) => {
   return (isRef(ref) && ref.value) || ref;
 };
+
+export const proxyRefs = (raw: any) => {
+  return new Proxy(raw, {
+    get(target, key) {
+      return unRef(Reflect.get(target, key));
+    },
+    set(target, key, value) {
+      if (isRef(target[key]) && !isRef(value)) {
+        return (target[key].value = value);
+      }
+      return Reflect.set(target, key, value);
+    },
+  });
+};
