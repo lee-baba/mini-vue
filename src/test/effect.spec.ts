@@ -60,10 +60,6 @@ describe("reactivity", () => {
     let dummy;
     const obj = reactive({ foo: 1 });
 
-    const scheduler = jest.fn(() => {
-      dummy = obj.foo;
-    });
-
     const runner = effect(() => {
       dummy = obj.foo;
     });

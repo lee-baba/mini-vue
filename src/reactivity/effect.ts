@@ -1,7 +1,7 @@
 import { extend } from "../shared";
 
 // 是否需要收集依赖
-let shouleCollectionEffect = true;
+let shouleCollectionEffect = false;
 class ReactiveEffect {
   private _effectFn: () => void;
   public scheduler: Function | undefined;
@@ -18,14 +18,18 @@ class ReactiveEffect {
     if (!this.isActive) {
       return this._effectFn();
     }
+
+    shouleCollectionEffect = true;
     activeEffect = this as any;
-    return this._effectFn();
+    const result = this._effectFn();
+
+    shouleCollectionEffect = false;
+    return result;
   }
 
   stop() {
     if (!this.isActive) return;
     this.isActive = false;
-    shouleCollectionEffect = false;
     cleanDepEffect(this);
     this.onStop && this.onStop();
   }
@@ -40,12 +44,12 @@ const cleanDepEffect = (effect: ReactiveEffect) => {
 let activeEffect = void 0;
 const targetMap = new Map();
 
-const isCollection = () => {
+const canCollect = () => {
   return activeEffect !== undefined && shouleCollectionEffect;
 };
 
 export const collectionEffect = (target: any, key: any) => {
-  if (!isCollection()) return;
+  if (!canCollect()) return;
   let depsMap = targetMap.get(target);
   if (!depsMap) {
     depsMap = new Map();
