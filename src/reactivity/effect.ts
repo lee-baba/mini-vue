@@ -56,6 +56,11 @@ export const collectionEffect = (target: any, key: any) => {
     targetMap.set(target, depsMap);
   }
 
+  trackEffect(depsMap, key);
+};
+
+export const trackEffect = (depsMap: any, key: any) => {
+  if (!activeEffect) return;
   let deps = depsMap.get(key);
   if (!deps) {
     deps = new Set();
@@ -69,7 +74,10 @@ export const collectionEffect = (target: any, key: any) => {
 export const triggerEffect = (target: any, key: any) => {
   const maps = targetMap.get(target);
   const effects = maps.get(key);
+  triggerAction(effects);
+};
 
+export const triggerAction = (effects: any) => {
   for (let effect of effects) {
     if (effect.scheduler) {
       effect.scheduler();
