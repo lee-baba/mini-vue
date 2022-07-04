@@ -13,6 +13,10 @@ export const isReadonly = (value: any): Boolean => {
   return !!value[reactiveFlag.ISREADONLU];
 };
 
+export const isProxy = (value: any): Boolean => {
+  return isReactive(value) || isReadonly(value);
+};
+
 export const reactive = (raw = {}) => {
   return createProxyObject(raw, mutableHandlers);
 };

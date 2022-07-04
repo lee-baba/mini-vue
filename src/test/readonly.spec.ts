@@ -1,4 +1,4 @@
-import { isReadonly } from "./../reactivity/reactive";
+import { isProxy, isReadonly } from "./../reactivity/reactive";
 import { readonly } from "../reactivity/reactive";
 
 describe("readonly ", () => {
@@ -27,5 +27,12 @@ describe("readonly ", () => {
 
     expect(isReadonly(readonlyObj)).toBe(true);
     expect(isReadonly(readonlyObj.baz)).toBe(true);
+  });
+
+  it("isProxy", () => {
+    const obj = { foo: 1, baz: { abc: 1 } };
+    const readonlyObj = readonly(obj);
+
+    expect(isProxy(readonlyObj)).toBe(true);
   });
 });
