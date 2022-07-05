@@ -6,16 +6,20 @@
   "author": "肖林 <xiaolin@dushu.io>",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "rollup -c rollup.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@babel/preset-env": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^28.1.4",
     "babel-jest": "^28.1.2",
     "jest": "^28.1.2",
+    "rollup": "^2.75.7",
     "ts-jest": "^28.0.5",
+    "tslib": "^2.4.0",
     "typescript": "^4.7.4"
   }
 }
