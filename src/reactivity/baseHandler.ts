@@ -32,9 +32,7 @@ const createGetter = (isReadonly = false, isShallow = false) => {
 const createSetter = (isReadonly = false) => {
   return (target: any, key: any, value: any) => {
     if (isReadonly) {
-      console.warn(
-        `${key.toString()} set fail,because the ${target} is readonly`
-      );
+      console.warn(`${key.toString()} set fail,because the ${key} is readonly`);
       return true;
     }
 

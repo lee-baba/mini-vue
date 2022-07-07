@@ -1,4 +1,5 @@
 import { h } from "../../dist/esm/index.js";
+import Foo from "./Foo.js";
 window.self = null;
 export default {
   render() {
@@ -7,10 +8,18 @@ export default {
       "div",
       {
         class: "red",
-        onClick: () => console.log("123", 123),
-        onMousedown: () => console.log("321", 321),
+        // onClick: () => console.log("123", 123),
+        // onMousedown: () => console.log("321", 321),
       },
-      this.msg
+      [
+        h("div", {}, "hi, app"),
+        h(Foo, {
+          count: 1,
+          onAdd(a, b) {
+            console.log("onAdd", a, b);
+          },
+        }),
+      ]
     );
   },
   setup() {
