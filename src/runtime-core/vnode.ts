@@ -11,9 +11,18 @@ export function createVnode(type: any, props?: any, children?: any) {
 
   if (typeof children === "string") {
     vnode.shapeFlag |= ShapeFLags.TEXT_CHILDREN;
-  } else if (Array.isArray(children)) {
+  }
+
+  if (Array.isArray(children)) {
     vnode.shapeFlag |= ShapeFLags.ARRAY_CHILDREN;
   }
+
+  if (vnode.shapeFlag & ShapeFLags.STATEFUL_COMPONENT) {
+    if (typeof children === "object") {
+      vnode.shapeFlag |= ShapeFLags.SLOT_CHILDREN;
+    }
+  }
+
   return vnode;
 }
 

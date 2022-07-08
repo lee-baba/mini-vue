@@ -1,3 +1,4 @@
+import { isObject } from "./../shared/index";
 import {
   mutableHandlers,
   reactiveFlag,
@@ -30,5 +31,6 @@ export const shallowReadonly = (raw = {}) => {
 };
 
 const createProxyObject = (raw: any, baseHandlers: any) => {
+  if (!isObject(raw)) return;
   return new Proxy(raw, baseHandlers);
 };

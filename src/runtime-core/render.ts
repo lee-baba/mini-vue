@@ -8,21 +8,17 @@ export function render(vnode: any, container: any) {
 function patch(vnode: any, container: any) {
   const { shapeFlag } = vnode;
 
-  if (shapeFlag & ShapeFLags.STATEFUL_COMPONENT) {
-    processComponent(vnode, container);
-  }
-
   if (shapeFlag & ShapeFLags.ELEMENT) {
     processElement(vnode, container);
+  }
+
+  if (shapeFlag & ShapeFLags.STATEFUL_COMPONENT) {
+    processComponent(vnode, container);
   }
 }
 
 function processElement(vnode: any, container: any) {
   mountElement(vnode, container);
-}
-
-function processComponent(vnode: any, container: any) {
-  mountComponent(vnode, container);
 }
 
 function mountElement(vnode: any, container: any) {
@@ -49,7 +45,12 @@ function mountElement(vnode: any, container: any) {
       element.setAttribute(key, val);
     }
   }
+
   container.append(element);
+}
+
+function processComponent(vnode: any, container: any) {
+  mountComponent(vnode, container);
 }
 
 function mountElementChildren(vnodes: any, container: any) {
@@ -68,7 +69,7 @@ function mountComponent(initialVnode: any, container: any) {
 function setupRenderEffect(instance: any, initialVnode: any, container: any) {
   const subTree = instance.render.call(instance.proxy);
 
-  initialVnode.el = subTree;
-
   patch(subTree, container);
+
+  initialVnode.el = subTree;
 }

@@ -1,5 +1,6 @@
 const publicInstanceProxyMap: any = {
   $el: (i: any) => i.vnode.el,
+  $slot: (i: any) => i.slots,
 };
 
 export const publicInstanceProxyHandlers = {

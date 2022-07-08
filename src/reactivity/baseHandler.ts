@@ -1,4 +1,4 @@
-import { extend, isObject } from "../shared";
+import { extend, isObject } from "../shared/index";
 import { collectionEffect, triggerEffect } from "./effect";
 import { reactive, readonly } from "./reactive";
 

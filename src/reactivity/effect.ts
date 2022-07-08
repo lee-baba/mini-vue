@@ -1,4 +1,4 @@
-import { extend } from "../shared";
+import { extend } from "../shared/index";
 
 // 是否需要收集依赖
 let shouleCollectionEffect = false;
@@ -39,6 +39,7 @@ const cleanDepEffect = (effect: ReactiveEffect) => {
   effect.deps.forEach((dep: any) => {
     dep.delete(effect);
   });
+  effect.deps.length = 0;
 };
 
 let activeEffect = void 0;

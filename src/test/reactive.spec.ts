@@ -18,7 +18,7 @@ describe("reacitve", () => {
     expect(isReactive(original)).toBe(false);
   });
 
-  it("isProxt", () => {
+  it("isProxy", () => {
     const original = { foo: 1, baz: { abc: 2 } };
     const observed = reactive(original);
 
