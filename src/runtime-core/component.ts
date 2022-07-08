@@ -3,6 +3,7 @@ import { initEmit } from "./componentEmit";
 import { shallowReadonly } from "./../reactivity/reactive";
 import { publicInstanceProxyHandlers } from "./componentPublicInstance";
 import { initSlots } from "./componentSlot";
+
 export function createComponentInstance(vnode: any) {
   const Component = {
     vnode,
@@ -26,7 +27,9 @@ export function setupComponent(instance: any) {
 function setupStatefulComponent(instance: any) {
   const { setup } = instance.type;
   if (setup) {
+    setCurrentInstance(instance);
     const setupResult = setup(instance.props, { emit: instance.emit });
+    setCurrentInstance(null);
     handleSetupResult(instance, setupResult);
   }
 }
@@ -43,4 +46,14 @@ function handleSetupResult(instance: any, setupResult: any) {
 function finishComponentSetup(instance: any) {
   const Component = instance.type;
   instance.render = Component.render;
+}
+
+let currentInstance = null;
+
+export function getCurrentInstance() {
+  return currentInstance;
+}
+
+export function setCurrentInstance(instance) {
+  currentInstance = instance;
 }
